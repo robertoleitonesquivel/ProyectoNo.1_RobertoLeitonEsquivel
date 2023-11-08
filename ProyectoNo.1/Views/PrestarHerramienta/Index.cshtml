@@ -1,0 +1,174 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="card p-2">
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="text" id="txtCedula" class="form-control" placeholder="Cédula" />
+                </div>
+                <div class="col-md-4">
+                    <button id="btnBuscarCedula" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="text" id="txtNombre" class="form-control" placeholder="Nombre herramienta" />
+                </div>
+                <div class="col-md-4">
+                    <button id="btnBuscarHerramienta" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-header">
+        <div id="cliente"></div>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                </tr>
+            </thead>
+            <tbody id="datos">
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer">
+        <button id="btnGuardarPrestamo" class="btn btn-info">Guardar</button>
+        <button id="btnLimpiar" class="btn btn-danger">Limpiar</button>
+    </div>
+</section>
+
+
+<script>
+
+    let herramientas = [];
+    let cliente;
+
+    document.querySelector('#btnBuscarCedula').addEventListener('click', (e) => {
+
+        const data = document.querySelector('#txtCedula').value;
+
+        show();
+        fetch(`/PrestarHerramienta/GetColaborador?cedula=${data}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        }).then(response => response.json())
+            .then(response => {
+                hide();
+                if (response.Succes) {
+                    cliente = response.Data.Cedula;
+                    document.querySelector('#cliente').innerHTML = `  <strong>Cliente: </strong> ${response.Data.Nombre}`;
+                } else {
+                    alert(response.Message);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    });
+
+
+    document.querySelector('#btnBuscarHerramienta').addEventListener('click', (e) => {
+
+        const data = document.querySelector('#txtNombre').value;
+
+        show();
+        fetch(`/PrestarHerramienta/GetHerramientas?nombre=${data}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        }).then(response => response.json())
+            .then(response => {
+                hide();
+                if (response.Succes) {
+                    herramientas = herramientas.concat(response.Data);
+                    DisplayData();
+                } else {
+                    alert(response.Message);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    });
+
+    function DisplayData() {
+
+        let html = ``;
+
+        herramientas.forEach(element => {
+            html += `<tr>
+                        <td>${element.Codigo}</td>
+                        <td>${element.Nombre}</td>
+                    </tr>`;
+        });
+
+        document.querySelector('#datos').innerHTML = html;
+    }
+
+
+    document.querySelector('#btnGuardarPrestamo').addEventListener('click', (e) => {
+
+        if (herramientas.length > 5) {
+            alert('Solo puede prestar un maximo de 5 herramientas.');
+            return;
+        }
+
+        let data = herramientas.map(element => {
+            return {
+                Cedula: cliente,
+                Codigo: element.Codigo
+            }
+        });
+
+
+        show();
+        fetch(`/PrestarHerramienta/Add`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).then(response => response.json())
+            .then(response => {
+                hide();
+                if (response.Succes) {
+                    Reset();
+                }
+                alert(response.Message);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    });
+
+    function Reset() {
+        cliente = '';
+        herramientas = [];
+        document.querySelector('#datos').innerHTML = ``;
+        document.querySelector('#txtNombre').value = ``;
+        document.querySelector('#txtCedula').value = ``;
+        document.querySelector('#cliente').innerHTML = ``;
+    }
+
+    document.querySelector('#btnLimpiar').addEventListener('click', (e) => {
+        Reset();
+    });
+
+    function show() {
+        document.querySelector('#loader').classList.remove('display');
+    }
+
+    function hide() {
+        document.querySelector('#loader').classList.add('display');
+    }
+
+
+</script>
+

@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace Repository.Contracts
 {
-    public interface IHerramientaRepository :ICrudRepository<Herramienta>
+    public interface IHerramientaRepository 
     {
+        Task<Herramienta> GetHerramientas(int codigo);
+        Task Prestar(List<PrestarHerramienta> prestarHerramientas);
+        Task Add(Herramienta herramienta);
     }
 }

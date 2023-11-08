@@ -45,7 +45,6 @@
     <Compile Include="Contracts\IColaboradorService.cs" />
     <Compile Include="Contracts\ICrudService.cs" />
     <Compile Include="Contracts\IHerramientaService.cs" />
-    <Compile Include="CrudService.cs" />
     <Compile Include="HerramientaService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

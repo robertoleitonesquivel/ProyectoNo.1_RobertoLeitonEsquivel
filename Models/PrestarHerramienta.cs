@@ -11,10 +11,12 @@ namespace Models
     {  
         public int Id { get; set; }
         [ForeignKey("Colaborador")]
-        public string CedulaId { get; set; }
+        public string Cedula { get; set; }
         public Colaborador Colaborador { get; set; }
         [ForeignKey("Herramienta")]
-        public int CodigoId { get; set; }
+        public int Codigo { get; set; }
         public Herramienta Herramienta { get; set; }
+        public DateTime FechaPrestamo { get; set; }
+        public DateTime FechaRegreso { get; set; }
     }
 }

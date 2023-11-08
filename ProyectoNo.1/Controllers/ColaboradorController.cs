@@ -20,11 +20,12 @@ namespace ProyectoNo._1.Controllers
         {
             colaboradorService = new ColaboradorService();
         }
-        // GET: Colaborador
+       
         public ActionResult Index()
         {
             var estados = new List<SelectListItem>
                         {
+                            new SelectListItem { Text = "--Seleccione--", Value = "" },
                             new SelectListItem { Text = "Activo", Value = "Activo" },
                             new SelectListItem { Text = "Inactivo", Value = "Inactivo" }
                         };
@@ -41,15 +42,22 @@ namespace ProyectoNo._1.Controllers
         {
             try
             {
-                var modelo = colaboradorDTO.Adapt<Colaborador>();
-                await colaboradorService.Add(modelo);
+                if (ModelState.IsValid)
+                {
+                    var modelo = colaboradorDTO.Adapt<Colaborador>();
+                    await colaboradorService.Add(modelo);
 
-                return View(colaboradorDTO);
+                    return Json(new { Succes = true, Message = "Colaborador agregado con éxito." }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { Succes = false, Message = "Datos Inválidos." }, JsonRequestBehavior.AllowGet);
+                }
             }
             catch (Exception ex)
             {
 
-              return View(colaboradorDTO);  
+                return Json(new { Succes = false, Message = ex.InnerException?.InnerException?.Message }, JsonRequestBehavior.AllowGet);
             }
         }
     }

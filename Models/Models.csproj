@@ -44,8 +44,12 @@
   <ItemGroup>
     <Compile Include="ColaboradorDTO.cs" />
     <Compile Include="Colaborador.cs" />
+    <Compile Include="GetColaboradorDTO.cs" />
+    <Compile Include="GetHerramientaDTO.cs" />
     <Compile Include="Herramienta.cs" />
+    <Compile Include="HerramientaDTO.cs" />
     <Compile Include="PrestarHerramienta.cs" />
+    <Compile Include="PrestarHerramientaDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

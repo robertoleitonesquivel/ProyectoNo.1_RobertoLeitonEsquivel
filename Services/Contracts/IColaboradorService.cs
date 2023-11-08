@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace Services.Contracts
 {
-    public interface IColaboradorService : ICrudService<Colaborador>
+    public interface IColaboradorService
     {
+        Task<Colaborador> GetByCedula(string cedula);
+        Task Add(Colaborador colaborador);
     }
 }

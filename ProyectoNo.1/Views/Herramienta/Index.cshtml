@@ -1,0 +1,74 @@
+﻿@model Models.HerramientaDTO
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<section class="card">
+    <div class="card-header">
+        Agregar nueva herramienta
+    </div>
+    <div class="card-body">
+        @using (Html.BeginForm("", "", FormMethod.Post, new { id = "frmHerramienta" }))
+        {
+            @*@Html.AntiForgeryToken()*@
+
+        <div class="row">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="mb-2 col-lg-12 col-md-12 col-sm-12">
+                <label>Nombre</label>
+                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-2 col-lg-12 col-md-12 col-sm-12">
+                <label>Descripción</label>
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="mb-2 col-lg-12 col-md-12 col-sm-12">
+                <input type="submit" value="Guardar" class="btn btn-warning" />
+            </div>
+        </div>
+        }
+    </div>
+</section>
+
+
+<script>
+
+    document.querySelector('#frmHerramienta').addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const data = Object.fromEntries(new FormData(e.target));
+
+        show();
+        fetch('/Herramienta/Add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).then(response => response.json())
+            .then(response => {
+                hide();
+                document.querySelector('#frmHerramienta').reset();
+                alert(response.Message);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+    });
+
+    function show() {
+        document.querySelector('#loader').classList.remove('display');
+    }
+
+    function hide() {
+        document.querySelector('#loader').classList.add('display');
+    }
+
+</script>

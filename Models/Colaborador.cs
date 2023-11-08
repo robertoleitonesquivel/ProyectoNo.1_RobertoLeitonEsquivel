@@ -10,11 +10,9 @@ namespace Models
 {
     public class Colaborador
     {
-        [Key]
+       
         public string Cedula { get; set; }
-        [StringLength(50)]
         public string Nombre { get; set; }
-        [StringLength(80)]
         public string Apellidos { get; set; }
         public DateTime FechaRegistro { get; set;}
         public string Estado { get; set;}

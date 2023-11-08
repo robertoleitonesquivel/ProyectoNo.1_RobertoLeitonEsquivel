@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Services.Contracts
+namespace Models
 {
-    public interface ICrudService<T> where T : class
+    public class GetHerramientaDTO
     {
-        Task Add(T entidad);
-       
+        public int Codigo { get; set; }
+        public string Nombre { get; set;}
     }
 }

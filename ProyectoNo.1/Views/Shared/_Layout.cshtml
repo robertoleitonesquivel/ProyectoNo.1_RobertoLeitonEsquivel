@@ -15,18 +15,23 @@
 </head>
 <body>
 
+    <div class="lds-spinner-container display" id="loader">
+        <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    </div>
+  
+
     <header>
-        <nav class="navbar navbar-expand-lg bg-primary">
+        <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Home</a>
+                <a class="navbar-brand" href="/Home/Index">Home</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
-                        </li>                    
+                            <a class="nav-link active" aria-current="page" href="/Home/Index">Inicio</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="~/Colaborador/Index">Colaboradores</a>
                         </li>
@@ -35,8 +40,8 @@
                                 Herramienta
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Prestar herramienta</a></li>
-                                <li><a class="dropdown-item" href="#">Ingresar nueva herramienta</a></li>                           
+                                <li><a class="dropdown-item" href="/PrestarHerramienta/Index">Prestar herramienta</a></li>
+                                <li><a class="dropdown-item" href="/Herramienta/Index">Ingresar nueva herramienta</a></li>
                             </ul>
                         </li>
                     </ul>

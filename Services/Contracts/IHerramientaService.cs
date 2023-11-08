@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 
 namespace Services.Contracts
 {
-    public interface IHerramientaService : ICrudService<Herramienta>
+    public interface IHerramientaService
     {
+        Task<Herramienta> GetHerramientas(int codigo);
+        Task Prestar(List<PrestarHerramienta> prestarHerramientas);
+        Task Add(Herramienta herramienta);
     }
 }
