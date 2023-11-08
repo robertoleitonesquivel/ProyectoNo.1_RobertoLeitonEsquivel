@@ -36,7 +36,7 @@ namespace ProyectoNo._1.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var result = herramientaService.GetHerramientas(herramientaDTO.Codigo);
+                    var result = await herramientaService.GetHerramientas(herramientaDTO.Codigo);
 
                     if (result is object)
                         return Json(new { Succes = true, Message = "La herramienta ya se encuentra registrada." }, JsonRequestBehavior.AllowGet);
@@ -59,6 +59,34 @@ namespace ProyectoNo._1.Controllers
             }
         }
 
-       
+        [HttpGet]
+        public async Task<JsonResult> GetHerramientaByColaborador(string cedula)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = await herramientaService.GetHerramientasByColaborador(cedula);
+
+                    if (result is object)
+                        return Json(new { Succes = true, Message = "La herramienta ya se encuentra registrada." }, JsonRequestBehavior.AllowGet);
+
+                    var modelo = result.Adapt<HerramientaDTO>();
+
+                    return Json(new { Succes = true, Message = "", Data = modelo }, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json(new { Succes = false, Message = "Datos Inválidos." }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return Json(new { Succes = false, Message = ex.InnerException?.InnerException?.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
     }
 }

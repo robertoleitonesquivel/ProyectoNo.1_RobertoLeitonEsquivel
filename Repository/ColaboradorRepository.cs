@@ -21,7 +21,8 @@ namespace Repository
                 using (var cmd = new SqlCommand())
                 {
                     cmd.Connection = conn;
-                    cmd.CommandText = @"SELECT Cedula,Nombre,Apellidos,Estado FROM Colaboradors
+                    cmd.CommandText = @"SELECT Cedula,Nombre,Apellidos,Estado 
+                                        FROM Colaboradors
                                         WHERE Cedula = @Cedula";
                     cmd.Parameters.Add("@Cedula", SqlDbType.NVarChar).Value = cedula;
 

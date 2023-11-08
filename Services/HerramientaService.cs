@@ -28,6 +28,11 @@ namespace Services
             return await herramientaRepository.GetHerramientas(codigo);
         }
 
+        public async Task<List<Herramienta>> GetHerramientasByColaborador(string cedula)
+        {
+           return await herramientaRepository.GetHerramientasByColaborador(cedula);
+        }
+
         public async Task Prestar(List<PrestarHerramienta> prestarHerramientas)
         {
             await herramientaRepository.Prestar(prestarHerramientas);

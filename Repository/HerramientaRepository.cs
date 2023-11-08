@@ -22,7 +22,8 @@ namespace Repository
                 using (var cmd = new SqlCommand())
                 {
                     cmd.Connection = conn;
-                    cmd.CommandText = @"SELECT Codigo,Nombre,Description 
+                    cmd.CommandText = @"SELECT Codigo,Nombre,Description
+                                        FROM Herramientas
                                         WHERE Codigo = @Codigo";
                     cmd.Parameters.Add("@Codigo", SqlDbType.Int).Value = codigo;
 
@@ -82,11 +83,46 @@ namespace Repository
                                         VALUES(@Codigo,@Nombre,@Description)";
                     cmd.Parameters.Add("@Codigo", SqlDbType.NVarChar, 128).Value = herramienta.Codigo;
                     cmd.Parameters.Add("@Nombre", SqlDbType.NVarChar, 50).Value = herramienta.Nombre;
-                    cmd.Parameters.Add("@Apellidos", SqlDbType.NVarChar, 80).Value = herramienta.Description;
+                    cmd.Parameters.Add("@Description", SqlDbType.NVarChar, 80).Value = herramienta.Description;
                     await cmd.ExecuteNonQueryAsync();
                 }
             }
         }
 
+        public async Task<List<Herramienta>> GetHerramientasByColaborador(string cedula)
+        {
+            List<Herramienta> herramientas = new List<Herramienta>();   
+
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+
+                using (var cmd = new SqlCommand())
+                {
+                    cmd.Connection = conn;
+                    cmd.CommandText = @"SELECT h.Codigo,h.Nombre,h.Description
+                                        FROM Herramientas h
+                                        INNER JOIN PrestarHerramientas ph
+                                            ON h.Codigo = ph.Codigo
+                                        WHERE ph.Cedula = @Cedula";
+                    cmd.Parameters.Add("@Cedula", SqlDbType.Int).Value = cedula;
+
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            herramientas.Add(new Herramienta()
+                            {
+                                Codigo = reader.GetInt16(0),
+                                Nombre = reader.GetString(1),
+                                Description = reader.GetString(2),
+                            });
+                        }
+                    }
+                }
+
+                return null;
+            }
+        }
     }
 }
