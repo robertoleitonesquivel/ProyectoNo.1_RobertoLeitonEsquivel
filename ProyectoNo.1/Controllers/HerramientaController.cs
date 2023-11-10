@@ -64,26 +64,18 @@ namespace ProyectoNo._1.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
-                {
-                    var result = await herramientaService.GetHerramientasByColaborador(cedula);
+                var result = await herramientaService.GetHerramientasByColaborador(cedula);
 
-                    if (result is object)
-                        return Json(new { Succes = true, Message = "La herramienta ya se encuentra registrada." }, JsonRequestBehavior.AllowGet);
+                if (result is object && result.Count > 0)
+                    return Json(new { Succes = true, Message = "", Data = result }, JsonRequestBehavior.AllowGet);
 
-                    var modelo = result.Adapt<HerramientaDTO>();
+                return Json(new { Succes = false, Message = "No se encontraron datos.", Data = result }, JsonRequestBehavior.AllowGet);
 
-                    return Json(new { Succes = true, Message = "", Data = modelo }, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    return Json(new { Succes = false, Message = "Datos Inválidos." }, JsonRequestBehavior.AllowGet);
-                }
             }
             catch (Exception ex)
             {
 
-                return Json(new { Succes = false, Message = ex.InnerException?.InnerException?.Message }, JsonRequestBehavior.AllowGet);
+                return Json(new { Succes = false, Message = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 

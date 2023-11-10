@@ -14,8 +14,8 @@ namespace Models
         [Required]
         public int Codigo { get; set; }
         [Required]
-        public string FechaPrestamo { get; set; }
+        public DateTime FechaPrestamo { get; set; } = DateTime.Now;
         [Required]
-        public string FechaRegreso { get; set; }
+        public DateTime FechaRegreso { get; set; } = DateTime.Now;
     }
 }

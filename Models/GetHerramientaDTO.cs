@@ -10,5 +10,7 @@ namespace Models
     {
         public int Codigo { get; set; }
         public string Nombre { get; set;}
+        public string FechaPrestamo { get; set; }
+        public string FechaRegreso { get;set; }
     }
 }

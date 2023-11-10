@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewBag.Title = "Devolucion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<section class="card p-2">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="d-flex">
+                <div class="col-md-10">
+                    <input type="text" id="txtCedula" class="form-control" placeholder="Cédula" />
+                </div>
+                <div class="col-md-1">
+                    <button id="btnBuscarCedula" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-header">
+        <div id="cliente"></div>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                </tr>
+            </thead>
+            <tbody id="datos">
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer">
+        <button id="btnGuardarPrestamo" class="btn btn-info">Guardar</button>
+        <button id="btnLimpiar" class="btn btn-danger">Limpiar</button>
+    </div>
+</section>
+
+<script>
+
+    let herramientas = [];
+
+    document.querySelector('#btnBuscarCedula').addEventListener('click', (e) => {
+
+        const data = document.querySelector('#txtCedula').value;
+
+        show();
+        fetch(`/Herramienta/GetHerramientaByColaborador?cedula=${data}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        }).then(response => response.json())
+            .then(response => {
+                hide();
+                if (response.Succes) {
+                    herramientas = herramientas.concat(response.Data);
+                    DisplayData();
+                } else {
+                    alert(response.Message);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    });
+
+    function DisplayData() {
+
+        let html = ``;
+
+        herramientas.forEach(element => {
+            html += `<tr>
+                        <td>${element.Codigo}</td>
+                        <td>${element.Nombre}</td>
+                    </tr>`;
+        });
+
+        document.querySelector('#datos').innerHTML = html;
+    }
+
+
+    function show() {
+        document.querySelector('#loader').classList.remove('display');
+    }
+
+    function hide() {
+        document.querySelector('#loader').classList.add('display');
+    }
+
+</script>
+
+

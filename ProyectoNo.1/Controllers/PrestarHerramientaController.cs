@@ -43,7 +43,7 @@ namespace ProyectoNo._1.Controllers
             catch (Exception ex)
             {
 
-                return Json(new { Succes = false, Message = ex.InnerException?.InnerException?.Message }, JsonRequestBehavior.AllowGet);
+                return Json(new { Succes = false, Message = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -83,8 +83,13 @@ namespace ProyectoNo._1.Controllers
             catch (Exception ex)
             {
 
-                return Json(new { Succes = false, Message = ex.InnerException?.InnerException?.Message }, JsonRequestBehavior.AllowGet);
+                return Json(new { Succes = false, Message = ex.Message }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        public ActionResult Devolucion()
+        {
+            return View();
         }
     }
 }

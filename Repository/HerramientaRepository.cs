@@ -33,7 +33,7 @@ namespace Repository
                         {
                             return new Herramienta()
                             {
-                                Codigo = reader.GetInt16(0),
+                                Codigo = reader.GetInt32(0),
                                 Nombre = reader.GetString(1),
                                 Description = reader.GetString(2),
                             };
@@ -58,7 +58,7 @@ namespace Repository
                     foreach (var prestamo in prestarHerramientas)
                     {
                         cmd.CommandText = @"INSERT INTO PrestarHerramientas(Cedula,Codigo,FechaPrestamo,FechaRegreso)
-                                            VALUES(@Cedula,@Nombre,@Apellidos,@FechaRegistro,@Estado)";
+                                            VALUES(@Cedula,@Codigo,@FechaPrestamo,@FechaRegreso)";
                         cmd.Parameters.Add("@Cedula", SqlDbType.NVarChar, 128).Value = prestamo.Cedula;
                         cmd.Parameters.Add("@Codigo", SqlDbType.NVarChar, 50).Value = prestamo.Codigo;
                         cmd.Parameters.Add("@FechaPrestamo", SqlDbType.DateTime).Value = prestamo.FechaPrestamo;
@@ -89,9 +89,9 @@ namespace Repository
             }
         }
 
-        public async Task<List<Herramienta>> GetHerramientasByColaborador(string cedula)
+        public async Task<List<GetHerramientaDTO>> GetHerramientasByColaborador(string cedula)
         {
-            List<Herramienta> herramientas = new List<Herramienta>();   
+            List<GetHerramientaDTO> herramientas = new List<GetHerramientaDTO>();
 
             using (var conn = GetConnection())
             {
@@ -100,7 +100,7 @@ namespace Repository
                 using (var cmd = new SqlCommand())
                 {
                     cmd.Connection = conn;
-                    cmd.CommandText = @"SELECT h.Codigo,h.Nombre,h.Description
+                    cmd.CommandText = @"SELECT h.Codigo,h.Nombre,ph.FechaPrestamo,ph.FechaRegreso
                                         FROM Herramientas h
                                         INNER JOIN PrestarHerramientas ph
                                             ON h.Codigo = ph.Codigo
@@ -111,17 +111,18 @@ namespace Repository
                     {
                         while (await reader.ReadAsync())
                         {
-                            herramientas.Add(new Herramienta()
+                            herramientas.Add(new GetHerramientaDTO()
                             {
-                                Codigo = reader.GetInt16(0),
+                                Codigo = reader.GetInt32(0),
                                 Nombre = reader.GetString(1),
-                                Description = reader.GetString(2),
+                                FechaPrestamo = reader.GetDateTime(2).ToString("yyyy-MM-dd"),
+                                FechaRegreso = reader.GetDateTime(3).ToString("yyyy-MM-dd")
                             });
                         }
                     }
                 }
 
-                return null;
+                return herramientas;
             }
         }
     }

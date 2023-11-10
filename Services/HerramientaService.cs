@@ -28,7 +28,7 @@ namespace Services
             return await herramientaRepository.GetHerramientas(codigo);
         }
 
-        public async Task<List<Herramienta>> GetHerramientasByColaborador(string cedula)
+        public async Task<List<GetHerramientaDTO>> GetHerramientasByColaborador(string cedula)
         {
            return await herramientaRepository.GetHerramientasByColaborador(cedula);
         }

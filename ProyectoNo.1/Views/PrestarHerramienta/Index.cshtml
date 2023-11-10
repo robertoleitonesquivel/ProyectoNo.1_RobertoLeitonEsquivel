@@ -35,6 +35,7 @@
                 <tr>
                     <th>Codigo</th>
                     <th>Nombre</th>
+                    <th>Fecha de regreso</th>
                 </tr>
             </thead>
             <tbody id="datos">
@@ -82,7 +83,7 @@
         const data = document.querySelector('#txtNombre').value;
 
         show();
-        fetch(`/PrestarHerramienta/GetHerramientas?nombre=${data}`, {
+        fetch(`/PrestarHerramienta/GetHerramientas?codigo=${data}`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         }).then(response => response.json())
@@ -104,10 +105,11 @@
 
         let html = ``;
 
-        herramientas.forEach(element => {
+        herramientas.forEach((element, index) => {
             html += `<tr>
                         <td>${element.Codigo}</td>
                         <td>${element.Nombre}</td>
+                        <td><input type="date" id="date_${index}" class="form-control"/></td>
                     </tr>`;
         });
 
@@ -117,17 +119,38 @@
 
     document.querySelector('#btnGuardarPrestamo').addEventListener('click', (e) => {
 
+        if (!herramientas || herramientas.length === 0) {
+            alert('Debe ingresar herramientas.');
+            return;
+        }
+
         if (herramientas.length > 5) {
             alert('Solo puede prestar un maximo de 5 herramientas.');
             return;
         }
 
-        let data = herramientas.map(element => {
+        let data = herramientas.map((element, index) => {
             return {
                 Cedula: cliente,
-                Codigo: element.Codigo
+                Codigo: element.Codigo,
+                FechaRegreso: document.querySelector(`#date_${index}`).value
             }
         });
+
+        if (!data.some(x => x.Cedula)) {
+            alert('Ingrese el cliente.');
+            return;
+        }
+
+        if (!data.some(x => x.FechaRegreso)) {
+            alert('Ingrese la fecha de regreso.');
+            return;
+        }
+
+        if (data.some(x => ValidarDias(x.FechaRegreso) > 5)) {
+            alert('La fecha de regreso no puede exceder los 5 días.');
+            return;
+        }
 
 
         show();
@@ -168,6 +191,18 @@
     function hide() {
         document.querySelector('#loader').classList.add('display');
     }
+
+    function ValidarDias(fechaprestamo) {
+        const fechaActual = new Date();
+
+        const otraFecha = new Date(fechaprestamo);
+
+        const diferenciaEnMilisegundos = otraFecha - fechaActual;
+
+        return diferenciaEnMilisegundos / (1000 * 60 * 60 * 24);
+    }
+
+
 
 
 </script>

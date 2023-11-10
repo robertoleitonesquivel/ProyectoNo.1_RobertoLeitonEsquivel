@@ -118,6 +118,7 @@
     <Content Include="Views\Colaborador\Index.cshtml" />
     <Content Include="Views\Herramienta\Index.cshtml" />
     <Content Include="Views\PrestarHerramienta\Index.cshtml" />
+    <Content Include="Views\PrestarHerramienta\Devolucion.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -34,8 +34,8 @@ namespace Repository
                             {
                                 Cedula = reader.GetString(0),
                                 Nombre = reader.GetString(1),
-                                Estado = reader.GetString(2),
-                                FechaRegistro = reader.GetDateTime(3)
+                                Apellidos = reader.GetString(2),
+                                Estado = reader.GetString(3)
                             };
                         }
                     }
