@@ -5,9 +5,11 @@ using Services.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 
 namespace ProyectoNo._1.Controllers
 {
@@ -15,7 +17,7 @@ namespace ProyectoNo._1.Controllers
     {
         private readonly IColaboradorService colaboradorService;
         private readonly IHerramientaService herramientaService;
-  
+
 
         public PrestarHerramientaController()
         {
@@ -73,7 +75,13 @@ namespace ProyectoNo._1.Controllers
 
             try
             {
+                var exist = await herramientaService.GetHerramientaPrestada(codigo);
+
+                if (exist > 0)
+                    return Json(new { Succes = false, Message = "La herramienta no se encuentra disponible." }, JsonRequestBehavior.AllowGet);
+
                 var result = await herramientaService.GetHerramientas(codigo);
+
                 var modelo = result.Adapt<GetHerramientaDTO>();
 
                 string message = modelo is object ? "" : "No se obtuvieron datos.";
@@ -87,9 +95,26 @@ namespace ProyectoNo._1.Controllers
             }
         }
 
+        [HttpGet]
         public ActionResult Devolucion()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> Devolucion(List<GetHerramientaDTO> devoluciones)
+        {
+            try
+            {
+                await herramientaService.Devolucion(devoluciones);
+
+                return Json(new { Succes = true, Message = "Devolución realizada con éxito." }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                return Json(new { Succes = false, Message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
         }
     }
 }

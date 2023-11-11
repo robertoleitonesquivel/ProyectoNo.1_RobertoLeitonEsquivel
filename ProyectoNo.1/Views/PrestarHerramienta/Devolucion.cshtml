@@ -25,8 +25,11 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th>Seleccionar</th>
                     <th>Codigo</th>
                     <th>Nombre</th>
+                    <th>Fecha prestamo</th>
+                    <th>Fecha regreso</th>
                 </tr>
             </thead>
             <tbody id="datos">
@@ -34,7 +37,7 @@
         </table>
     </div>
     <div class="card-footer">
-        <button id="btnGuardarPrestamo" class="btn btn-info">Guardar</button>
+        <button id="btnDevolucion" class="btn btn-info">Guardar</button>
         <button id="btnLimpiar" class="btn btn-danger">Limpiar</button>
     </div>
 </section>
@@ -55,8 +58,41 @@
             .then(response => {
                 hide();
                 if (response.Succes) {
-                    herramientas = herramientas.concat(response.Data);
+                    herramientas = herramientas.concat(response.Data.map(element => { return { ...element, Asigned: false } }));
                     DisplayData();
+                } else {
+                    alert(response.Message);
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    });
+
+    document.querySelector('#btnLimpiar').addEventListener('click', (e) => {
+        Reset();
+    });
+
+    document.querySelector('#btnDevolucion').addEventListener('click', (e) => {
+
+        const data = herramientas.filter(x => x.Asigned);
+
+        if (!data || data.length === 0) {
+            alert('No ha seleccionado herramientas para la devolución');
+            return;
+        }
+
+        show();
+        fetch(`/PrestarHerramienta/Devolucion`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+            headers: { 'Content-Type': 'application/json' },
+        }).then(response => response.json())
+            .then(response => {
+                hide();
+                if (response.Succes) {
+                    Reset();
+                    alert(response.Message);                 
                 } else {
                     alert(response.Message);
                 }
@@ -70,16 +106,18 @@
 
         let html = ``;
 
-        herramientas.forEach(element => {
+        herramientas.forEach((element, index) => {
             html += `<tr>
+                        <td><input type="checkbox" id="check_${index}" onchange="Seleccionar(${index})"/></td>
                         <td>${element.Codigo}</td>
                         <td>${element.Nombre}</td>
+                        <td>${element.FechaPrestamo}</td>
+                        <td>${element.FechaRegreso}</td>
                     </tr>`;
         });
 
         document.querySelector('#datos').innerHTML = html;
     }
-
 
     function show() {
         document.querySelector('#loader').classList.remove('display');
@@ -87,6 +125,28 @@
 
     function hide() {
         document.querySelector('#loader').classList.add('display');
+    }
+
+    function Seleccionar(index) {
+        const element = document.querySelector(`#check_${index}`);
+        herramientas[index].Asigned = element.checked;
+    }
+
+    function Reset() {
+        herramientas = [];
+        document.querySelector('#txtCedula').value = '';
+        DisplayData();
+    }
+
+    class Herramienta {
+        constructor(Asigned, Codigo, Nombre, FechaPrestamo, FechaRegreso) {
+            this.Asigned = Asigned;
+            this.Nombre = Codigo;
+            this.Codigo = Nombre;
+            this.FechaPrestamo = FechaPrestamo;
+            this.FechaRegreso = FechaRegreso;
+        }
+
     }
 
 </script>

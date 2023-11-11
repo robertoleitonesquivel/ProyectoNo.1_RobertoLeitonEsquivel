@@ -11,7 +11,9 @@ namespace Repository.Contracts
     {
         Task<Herramienta> GetHerramientas(int codigo);
         Task Prestar(List<PrestarHerramienta> prestarHerramientas);
+        Task Devolucion(List<GetHerramientaDTO> devoluciones);
         Task Add(Herramienta herramienta);
         Task<List<GetHerramientaDTO>> GetHerramientasByColaborador(string cedula);
+        Task<int> GetHerramientaPrestada(int codigo);
     }
 }

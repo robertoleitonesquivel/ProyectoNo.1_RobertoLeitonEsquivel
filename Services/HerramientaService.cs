@@ -23,6 +23,16 @@ namespace Services
            await herramientaRepository.Add(herramienta);
         }
 
+        public async Task Devolucion(List<GetHerramientaDTO> devoluciones)
+        {
+            await herramientaRepository.Devolucion(devoluciones);
+        }
+
+        public async Task<int> GetHerramientaPrestada(int codigo)
+        {
+            return await herramientaRepository.GetHerramientaPrestada(codigo);
+        }
+
         public async Task<Herramienta> GetHerramientas(int codigo)
         {
             return await herramientaRepository.GetHerramientas(codigo);

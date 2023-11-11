@@ -64,6 +64,7 @@ namespace Repository
                         cmd.Parameters.Add("@FechaPrestamo", SqlDbType.DateTime).Value = prestamo.FechaPrestamo;
                         cmd.Parameters.Add("@FechaRegreso", SqlDbType.DateTime).Value = prestamo.FechaRegreso;
                         await cmd.ExecuteNonQueryAsync();
+                        cmd.Parameters.Clear();
                     }
 
                 }
@@ -123,6 +124,49 @@ namespace Repository
                 }
 
                 return herramientas;
+            }
+        }
+
+        public async Task<int> GetHerramientaPrestada(int codigo)
+        {
+
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+
+                using (var cmd = new SqlCommand())
+                {
+                    cmd.Connection = conn;
+                    cmd.CommandText = @"SELECT COUNT(ph.Codigo)
+                                        FROM PrestarHerramientas ph
+                                        WHERE ph.Codigo = @Codigo";
+                    cmd.Parameters.Add("@Codigo", SqlDbType.Int).Value = codigo;
+
+                    var reader = await cmd.ExecuteScalarAsync();
+
+                    return reader is object ? (int)reader : 0;
+                }            
+            }    
+        }
+
+        public async Task Devolucion(List<GetHerramientaDTO> devoluciones)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+
+                using (var cmd = new SqlCommand())
+                {
+                    cmd.Connection = conn;
+
+                    foreach (var item in devoluciones)
+                    {
+                        cmd.CommandText = @"DELETE FROM PrestarHerramientas
+                                            WHERE Codigo = @Codigo";
+                        cmd.Parameters.Add("@Codigo", SqlDbType.Int).Value = item.Codigo;                     
+                        await cmd.ExecuteNonQueryAsync();
+                    }                
+                }
             }
         }
     }

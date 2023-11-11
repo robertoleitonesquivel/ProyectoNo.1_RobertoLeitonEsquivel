@@ -45,6 +45,7 @@ namespace ProyectoNo._1.Controllers
                 if (ModelState.IsValid)
                 {
                     var modelo = colaboradorDTO.Adapt<Colaborador>();
+
                     await colaboradorService.Add(modelo);
 
                     return Json(new { Succes = true, Message = "Colaborador agregado con éxito." }, JsonRequestBehavior.AllowGet);
@@ -57,7 +58,7 @@ namespace ProyectoNo._1.Controllers
             catch (Exception ex)
             {
 
-                return Json(new { Succes = false, Message = ex.InnerException?.InnerException?.Message }, JsonRequestBehavior.AllowGet);
+                return Json(new { Succes = false, Message = ex.Message }, JsonRequestBehavior.AllowGet);
             }
         }
     }

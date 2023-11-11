@@ -13,5 +13,7 @@ namespace Services.Contracts
         Task Prestar(List<PrestarHerramienta> prestarHerramientas);
         Task Add(Herramienta herramienta);
         Task<List<GetHerramientaDTO>> GetHerramientasByColaborador(string cedula);
+        Task Devolucion(List<GetHerramientaDTO> devoluciones);
+        Task<int> GetHerramientaPrestada(int codigo);
     }
 }
